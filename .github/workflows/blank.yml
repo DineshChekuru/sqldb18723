@@ -4,14 +4,18 @@ name: CI
 
 # Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
+  # Triggers the workflow on push or pull request events but only for the "syn-pipelines-dev-prod" branch
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+    branches: [ "qa" ]
+  #pull_request:
+  #  branches: [ "syn-pipelines-dev-prodqa" ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
+  
+permissions:
+      id-token: write
+      contents: write
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -24,13 +28,38 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
-
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
-
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
+      
+      - name: Create Artifacts Directory
         run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+          New-Item -ItemType Directory -Force -Path (Join-Path ${{ github.workspace }} 'artifacts')
+          
+      - name: Copy Artifacts
+        run: |
+          $sourcePath = "${{ github.workspace }}\dev"
+          $destinationPath = (Join-Path ${{ github.workspace }} 'artifacts')
+          Copy-Item -Path "$sourcePath\*" -Destination $destinationPath -Recurse -Force
+          
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: buildlogs
+          path: ${{ github.workspace }}\artifacts\
+              
+    #  - name: CLI Login
+    #    run: |
+    #          az login --service-principal -u ${{ secrets.CLIENTID }} -p ${{ secrets.CLIENTSECRET }} --tenant ${{ secrets.AZURETENANTID }}
+    #          az Synapse trigger list --workspace-name syn1737
+              
+            
+        
+    #  - uses: Azure/synapse-workspace-deployment@V1.7.0
+    #    with:
+    #      TargetWorkspaceName: 'syn-tccc-mad-use2-dev-01'
+    #      ArtifactsFolder: './dev'
+    #      environment: 'Azure Public'
+    #      resourceGroup: 'rg-tccc-marketing-analytics-cx-dev'
+    #      clientId: ${{ secrets.CLIENTID }}
+    #      clientSecret: ${{ secrets.CLIENTSECRET }}
+    #      subscriptionId: ${{ secrets.AZURESUBSCRIPTIONID }}
+    #      tenantId: ${{ secrets.AZURETENANTID }}
+    #      operation: 'validateDeploy'
