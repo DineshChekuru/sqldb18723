@@ -52,14 +52,14 @@ jobs:
               
             
         
-    #  - uses: Azure/synapse-workspace-deployment@V1.7.0
-    #    with:
-    #      TargetWorkspaceName: 'syn-tccc-mad-use2-dev-01'
-    #      ArtifactsFolder: './dev'
-    #      environment: 'Azure Public'
-    #      resourceGroup: 'rg-tccc-marketing-analytics-cx-dev'
-    #      clientId: ${{ secrets.CLIENTID }}
-    #      clientSecret: ${{ secrets.CLIENTSECRET }}
-    #      subscriptionId: ${{ secrets.AZURESUBSCRIPTIONID }}
-    #      tenantId: ${{ secrets.AZURETENANTID }}
-    #      operation: 'validateDeploy'
+      - uses: Azure/synapse-workspace-deployment@V1.7.0
+        with:
+          TargetWorkspaceName: 'syn1737'
+          ArtifactsFolder: './dev'
+          environment: 'Azure Public'
+          resourceGroup: 'dinesh'
+          clientId: 'f55422ff-27d7-49e9-bac4-b2d08e348b1e'
+          clientSecret: '51y8Q~Z65zXIl9VvlskSLdWF3wiqSnXgqH_yMb9f'
+          subscriptionId: '56542616-48a1-4fd4-a9e2-947518afe39b'
+          tenantId: 'd5d054a0-66ec-434f-88c2-0ac973a0dfb1'
+          operation: 'validateDeploy'
