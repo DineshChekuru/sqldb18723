@@ -8,7 +8,7 @@ on:
   push:
     branches: [ "qa" ]
   #pull_request:
-  #  branches: [ "syn-pipelines-dev-prodqa" ]
+  #  branches: [ "qa" ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -37,7 +37,7 @@ jobs:
    #     run: |
    #       $sourcePath = "${{ github.workspace }}\dev"
    #       $destinationPath = (Join-Path ${{ github.workspace }} 'artifacts')
-          Copy-Item -Path "$sourcePath\*" -Destination $destinationPath -Recurse -Force
+   #      Copy-Item -Path "$sourcePath\*" -Destination $destinationPath -Recurse -Force
           
    #   - name: Upload Build Artifacts
    #     uses: actions/upload-artifact@v2
@@ -45,10 +45,10 @@ jobs:
    #       name: buildlogs
    #       path: ${{ github.workspace }}\artifacts\
               
-    #  - name: CLI Login
-    #    run: |
-    #          az login --service-principal -u ${{ secrets.CLIENTID }} -p ${{ secrets.CLIENTSECRET }} --tenant ${{ secrets.AZURETENANTID }}
-    #          az Synapse trigger list --workspace-name syn1737
+      - name: CLI Login
+        run: |
+              az login --service-principal -u ${{ secrets.CLIENTID }} -p ${{ secrets.CLIENTSECRET }} --tenant ${{ secrets.AZURETENANTID }}
+             # az Synapse trigger list --workspace-name syn1737
               
             
         
