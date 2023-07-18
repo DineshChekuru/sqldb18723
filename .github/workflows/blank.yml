@@ -29,21 +29,21 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
       
-      - name: Create Artifacts Directory
-        run: |
-          New-Item -ItemType Directory -Force -Path (Join-Path ${{ github.workspace }} 'artifacts')
+   #   - name: Create Artifacts Directory
+   #     run: |
+   #       New-Item -ItemType Directory -Force -Path (Join-Path ${{ github.workspace }} 'artifacts')
           
-      - name: Copy Artifacts
-        run: |
-          $sourcePath = "${{ github.workspace }}\dev"
-          $destinationPath = (Join-Path ${{ github.workspace }} 'artifacts')
+   #   - name: Copy Artifacts
+   #     run: |
+   #       $sourcePath = "${{ github.workspace }}\dev"
+   #       $destinationPath = (Join-Path ${{ github.workspace }} 'artifacts')
           Copy-Item -Path "$sourcePath\*" -Destination $destinationPath -Recurse -Force
           
-      - name: Upload Build Artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: buildlogs
-          path: ${{ github.workspace }}\artifacts\
+   #   - name: Upload Build Artifacts
+   #     uses: actions/upload-artifact@v2
+   #     with:
+   #       name: buildlogs
+   #       path: ${{ github.workspace }}\artifacts\
               
     #  - name: CLI Login
     #    run: |
