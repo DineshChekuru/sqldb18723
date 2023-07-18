@@ -54,7 +54,7 @@ jobs:
         
       - uses: Azure/synapse-workspace-deployment@V1.7.0
         with:
-          TargetWorkspaceName: 'syn1737'
+          TargetWorkspaceName: 'synprod'
           ArtifactsFolder: './dev'
           environment: 'Azure Public'
           resourceGroup: 'dinesh'
@@ -63,3 +63,7 @@ jobs:
           subscriptionId: '56542616-48a1-4fd4-a9e2-947518afe39b'
           tenantId: 'd5d054a0-66ec-434f-88c2-0ac973a0dfb1'
           operation: 'validateDeploy'
+          
+      - name: Update Configuration
+        run: |
+          powershell -ExecutionPolicy Unrestricted -File ./update_script.ps1
