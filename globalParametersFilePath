@@ -19,3 +19,5 @@ foreach ($gp in $globalParametersObject.GetEnumerator()) {
 }
 $dataFactory = Get-AzDataFactoryV2 -ResourceGroupName $resourceGroupName -Name $dataFactoryName
 $dataFactory.GlobalParameters = $newGlobalParameters
+Write-Host "Updating" $newGlobalParameters.Count "global parameters."
+Set-AzDataFactoryV2 -InputObject $dataFactory -Force
