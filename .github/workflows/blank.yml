@@ -72,6 +72,6 @@ jobs:
         run: |
           $PSVersionTable.PSVersion.ToString()
           
-     # - name: Update Configuration
-     #   run: |
-     #     powershell -ExecutionPolicy Unrestricted -File ./update_script.ps1
+      - name: Update Configuration
+        run: |
+          powershell -ExecutionPolicy Unrestricted -File ./update_script.ps1
