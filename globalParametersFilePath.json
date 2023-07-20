@@ -14,7 +14,6 @@ foreach ($gp in $globalParametersObject.GetEnumerator()) {
     Write-Host "Adding global parameter:" $gp.Key
     $globalParameterValue = $gp.Value.ToObject([Microsoft.Azure.Management.DataFactory.Models.GlobalParameterSpecification])
     $newGlobalParameters.Add($gp.Key, $globalParameterValue)
-
 }
 $dataFactory = Get-AzDataFactoryV2 -ResourceGroupName $resourceGroupName -Name $dataFactoryName
 $dataFactory.GlobalParameters = $newGlobalParameters
