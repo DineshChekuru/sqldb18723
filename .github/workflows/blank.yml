@@ -59,7 +59,7 @@ jobs:
           azureSubscription: 'Free Trial'
           ScriptType: 'FilePath'
           script: './UpdateGlobalParameters.ps1'
-          ScriptArguments: '-globalParametersFilePath "./updated_config.json" -resourceGroupName "dinesh" -WorkspaceName "synprod"'
+          ScriptArguments: '-globalParametersFilePath "./updated_config.json" -resourceGroupName "dinesh" -workspaceName "synprod"'
           azurePowerShellVersion: 'LatestVersion'
           enabled: true
               
