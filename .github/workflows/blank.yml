@@ -60,6 +60,8 @@ jobs:
           ScriptType: 'FilePath'
           script: './UpdateGlobalParameters.ps1'
           ScriptArguments: '-globalParametersFilePath "./updated_config.json" -resourceGroupName "dinesh" -SynapesWorkspaceName "synprod"'
+          azurePowerShellVersion: 'LatestVersion'
+          enabled: false
               
             
         
