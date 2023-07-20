@@ -72,7 +72,6 @@ jobs:
         with:
           TargetWorkspaceName: 'syn1737'
           ArtifactsFolder: './dev'
-          OverrideArmParameters: ./updated_config.js+on
           environment: 'Azure Public'
           resourceGroup: 'dinesh'
           clientId: 'f55422ff-27d7-49e9-bac4-b2d08e348b1e'
