@@ -8,6 +8,11 @@
 		"AzureDataLakeStorage1_accountKey": {
 			"value": ""
 		},
+		"resourceGroupName": {
+		"type": "string",
+		"value": "dinesh"
+			
+		},	
 		"syn1737-WorkspaceDefaultSqlServer_connectionString": {
 			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:syn1737.sql.azuresynapse.net,1433;Initial Catalog=@{linkedService().DBName}"
 		},
