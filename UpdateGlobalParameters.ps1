@@ -15,7 +15,7 @@ foreach ($gp in $globalParametersObject.GetEnumerator()) {
     $globalParameterValue = $gp.Value.ToObject([Microsoft.Azure.Management.Synapse.Models.GlobalParameterSpecification])
     $newGlobalParameters.Add($gp.Key, $globalParameterValue)
 }
-$dataFactory = Get-AzSynapseWorkspace -ResourceGroupName $resourceGroupName -Name $dataFactoryName
+$dataFactory = Get-AzSynapseWorkspace -ResourceGroupName $resourceGroupName -Name $workspaceName
 $dataFactory.GlobalParameters = $newGlobalParameters
 Write-Host "Updating" $newGlobalParameters.Count "global parameters."
-Set-AzDataFactoryV2 -InputObject $dataFactory -Force
+Set-AzSynapseWorkspace -InputObject $dataFactory -Force
