@@ -66,8 +66,7 @@ jobs:
      
       - name: Install PowerShell
         run: |
-              sudo apt-get update
-              sudo apt-get install -y powershell
+              iex "& { $(irm https://aka.ms/install-powershell.ps1) }"
               
       - name: Check PowerShell version
         run: |
