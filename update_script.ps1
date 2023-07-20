@@ -11,4 +11,4 @@ $Env:AzureKeyVault1_properties_typeProperties_baseUrl = $UpdatedConfigContent.pa
 $Env:syn1737_WorkspaceDefaultStorage_properties_typeProperties_url = $UpdatedConfigContent.parameters.syn1737_WorkspaceDefaultStorage_properties_typeProperties_url.value
 
 # Rerun the workflow with the updated configuration values
-Invoke-Expression -Command "your_actual_command_here"
+Invoke-Expression -Command "Start-MyWorkflow"
