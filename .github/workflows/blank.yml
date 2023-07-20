@@ -50,21 +50,21 @@ jobs:
               az login --service-principal -u 'f55422ff-27d7-49e9-bac4-b2d08e348b1e' -p '51y8Q~Z65zXIl9VvlskSLdWF3wiqSnXgqH_yMb9f' --tenant 'd5d054a0-66ec-434f-88c2-0ac973a0dfb1'
               az Synapse trigger list --workspace-name synprod
               
-      - name: PowerShell script
-        # You may pin to the exact commit or the version.
-        # uses: Amadevus/pwsh-script@97a8b211a5922816aa8a69ced41fa32f23477186
-        uses: Amadevus/pwsh-script@v2.0.3
-        with:
-          # PowerShell script to execute in Actions-hydrated context
-          azureSubscription: 'Free Trial'
-          ScriptType: 'FilePath'
-          script: './UpdateGlobalParameters.ps1'
-          ScriptArguments: "-globalParametersFilePath './updated_config.json' -resourceGroupName 'dinesh' -workspaceName 'synprod'"
-          azurePowerShellVersion: 'LatestVersion'
-          enabled: true
-         # globalParametersFilePath: './updated_config.json'
-         # resourceGroupName: 'dinesh'
-         # WorkspaceName: 'synprod'
+#       - name: PowerShell script
+#         # You may pin to the exact commit or the version.
+#         # uses: Amadevus/pwsh-script@97a8b211a5922816aa8a69ced41fa32f23477186
+#         uses: Amadevus/pwsh-script@v2.0.3
+#         with:
+#           # PowerShell script to execute in Actions-hydrated context
+#           azureSubscription: 'Free Trial'
+#           ScriptType: 'FilePath'
+#           script: './UpdateGlobalParameters.ps1'
+#           ScriptArguments: "-globalParametersFilePath './updated_config.json' -resourceGroupName 'dinesh' -workspaceName 'synprod'"
+#           azurePowerShellVersion: 'LatestVersion'
+#           enabled: true
+#          # globalParametersFilePath: './updated_config.json'
+#          # resourceGroupName: 'dinesh'
+#          # WorkspaceName: 'synprod'
               
             
         
@@ -97,14 +97,14 @@ jobs:
             
 
      
-    #  - name: Install PowerShell
-    #    run: |
-    #          iex "& { $(irm https://aka.ms/install-powershell.ps1) }"
+      - name: Install PowerShell
+        run: |
+              iex "& { $(irm https://aka.ms/install-powershell.ps1) }"
               
-    #  - name: Check PowerShell version
-    #    run: |
-    #      $PSVersionTable.PSVersion.ToString()
+      - name: Check PowerShell version
+        run: |
+          $PSVersionTable.PSVersion.ToString()
           
-    #  - name: Update Configuration
-    #    run: |
-    #      powershell -ExecutionPolicy Unrestricted -File ./update_script.ps1
+      - name: Update Configuration
+        run: |
+          powershell -ExecutionPolicy Unrestricted -File ./update_script.ps1
