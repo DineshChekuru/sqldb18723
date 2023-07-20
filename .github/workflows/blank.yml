@@ -81,7 +81,7 @@ jobs:
           operation: 'validateDeploy'
 
       - name: Generate templates
-        run: ./generate-templates.sh
+        run: ./generate-templates.ps1
 
       - name: Switch to workspace_publish branch
         run: git checkout -B workspace_publish
