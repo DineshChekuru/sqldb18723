@@ -52,30 +52,31 @@ jobs:
               
             
         
-     # - uses: Azure/synapse-workspace-deployment@V1.7.0
-     #   with:
-     #     TargetWorkspaceName: 'synprod'
-     #     ArtifactsFolder: './dev'
-     #     environment: 'Azure Public'
-     #     resourceGroup: 'dinesh'
-     #     clientId: 'f55422ff-27d7-49e9-bac4-b2d08e348b1e'
-     #     clientSecret: '51y8Q~Z65zXIl9VvlskSLdWF3wiqSnXgqH_yMb9f'
-     #     subscriptionId: '56542616-48a1-4fd4-a9e2-947518afe39b'
-     #     tenantId: 'd5d054a0-66ec-434f-88c2-0ac973a0dfb1'
-     #     operation: 'validateDeploy'
-     
-      - name: Synapse workspace deployment
-        uses: Azure/Synapse-workspace-deployment@V1.7.0
+      - uses: Azure/synapse-workspace-deployment@V1.7.0
         with:
           TargetWorkspaceName: 'synprod'
+          ArtifactsFolder: './dev'
           OverrideArmParameters: ./updated_config.json
-          Environment: 'Azure Public'
+          environment: 'Azure Public'
           resourceGroup: 'dinesh'
           clientId: 'f55422ff-27d7-49e9-bac4-b2d08e348b1e'
           clientSecret: '51y8Q~Z65zXIl9VvlskSLdWF3wiqSnXgqH_yMb9f'
           subscriptionId: '56542616-48a1-4fd4-a9e2-947518afe39b'
           tenantId: 'd5d054a0-66ec-434f-88c2-0ac973a0dfb1'
           operation: 'validateDeploy'
+     
+     # - name: Synapse workspace deployment
+     #   uses: Azure/Synapse-workspace-deployment@V1.7.0
+     #   with:
+     #     TargetWorkspaceName: 'synprod'
+     #     OverrideArmParameters: ./updated_config.json
+     #     Environment: 'Azure Public'
+     #     resourceGroup: 'dinesh'
+     #     clientId: 'f55422ff-27d7-49e9-bac4-b2d08e348b1e'
+     #     clientSecret: '51y8Q~Z65zXIl9VvlskSLdWF3wiqSnXgqH_yMb9f'
+     #     subscriptionId: '56542616-48a1-4fd4-a9e2-947518afe39b'
+     #     tenantId: 'd5d054a0-66ec-434f-88c2-0ac973a0dfb1'
+     #     operation: 'validateDeploy'
 
             
 
