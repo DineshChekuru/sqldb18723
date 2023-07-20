@@ -59,12 +59,12 @@ jobs:
           azureSubscription: 'Free Trial'
           ScriptType: 'FilePath'
           script: './UpdateGlobalParameters.ps1'
-          #ScriptArguments: '-globalParametersFilePath "./updated_config.json" -resourceGroupName "dinesh" -workspaceName "synprod"'
+          ScriptArguments: "-globalParametersFilePath './updated_config.json' -resourceGroupName 'dinesh' -workspaceName 'synprod'"
           azurePowerShellVersion: 'LatestVersion'
           enabled: true
-          globalParametersFilePath: './updated_config.json'
-          resourceGroupName: 'dinesh'
-          WorkspaceName: 'synprod'
+         # globalParametersFilePath: './updated_config.json'
+         # resourceGroupName: 'dinesh'
+         # WorkspaceName: 'synprod'
               
             
         
@@ -72,7 +72,7 @@ jobs:
 #         with:
 #           TargetWorkspaceName: 'synprod'
 #           ArtifactsFolder: './dev'
-#           OverrideArmParameters: ./updated_config.json
+#           OverrideArmParameters: ./updated_config.js+on
 #           environment: 'Azure Public'
 #           resourceGroup: 'dinesh'
 #           clientId: 'f55422ff-27d7-49e9-bac4-b2d08e348b1e'
