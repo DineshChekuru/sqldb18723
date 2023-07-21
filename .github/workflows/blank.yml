@@ -48,7 +48,7 @@ jobs:
       - name: CLI Login
         run: |
               az login --service-principal -u 'f55422ff-27d7-49e9-bac4-b2d08e348b1e' -p '51y8Q~Z65zXIl9VvlskSLdWF3wiqSnXgqH_yMb9f' --tenant 'd5d054a0-66ec-434f-88c2-0ac973a0dfb1'
-              az Synapse trigger list --workspace-name synprod
+              az Synapse trigger list --workspace-name syn1737
               
 #       - name: PowerShell script
 #         # You may pin to the exact commit or the version.
@@ -80,20 +80,20 @@ jobs:
           tenantId: 'd5d054a0-66ec-434f-88c2-0ac973a0dfb1'
           operation: 'validateDeploy'
 
-      - name: Generate templates
-        run: ./generate-templates.ps1
+#       - name: Generate templates
+#         run: ./generate-templates.ps1
 
-      - name: Switch to workspace_publish branch
-        run: git checkout -B workspace_publish
+#       - name: Switch to workspace_publish branch
+#         run: git checkout -B workspace_publish
 
-      - name: Copy templates and commit
-        run: |
-          cp -R generated-templates/* .
-          git add -A
-          git commit -m "Publish Synapse templates from GitHub Actions"
+#       - name: Copy templates and commit
+#         run: |
+#           cp -R generated-templates/* .
+#           git add -A
+#           git commit -m "Publish Synapse templates from GitHub Actions"
 
-      - name: Push templates to workspace_publish branch
-        run: git push --force origin workspace_publish
+#       - name: Push templates to workspace_publish branch
+#         run: git push --force origin workspace_publish
      
      # - name: Synapse workspace deployment
      #   uses: Azure/Synapse-workspace-deployment@V1.7.0
