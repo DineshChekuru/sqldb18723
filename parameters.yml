@@ -1,0 +1,2 @@
+AppSecrets_properties_typeProperties_baseUrl: https://key1737.vault.azure.net/
+AzureDataLakeStorage1_properties_typeProperties_url: https://key1737.vault.azure.net/

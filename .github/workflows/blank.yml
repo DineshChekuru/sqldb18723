@@ -6,9 +6,7 @@ name: CI
 on:
   # Triggers the workflow on push or pull request events but only for the "syn-pipelines-dev-prod" branch
   push:
-    branches: [ "qa" ]
-  #pull_request:
-  #  branches: [ "qa" ]
+    branches: [ "prod_qa" ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -28,97 +26,22 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
-      
-   #   - name: Create Artifacts Directory
-   #     run: |
-   #       New-Item -ItemType Directory -Force -Path (Join-Path ${{ github.workspace }} 'artifacts')
-          
-   #   - name: Copy Artifacts
-   #     run: |
-   #       $sourcePath = "${{ github.workspace }}\dev"
-   #       $destinationPath = (Join-Path ${{ github.workspace }} 'artifacts')
-   #      Copy-Item -Path "$sourcePath\*" -Destination $destinationPath -Recurse -Force
-          
-   #   - name: Upload Build Artifacts
-   #     uses: actions/upload-artifact@v2
-   #     with:
-   #       name: buildlogs
-   #       path: ${{ github.workspace }}\artifacts\
               
       - name: CLI Login
         run: |
               az login --service-principal -u 'f55422ff-27d7-49e9-bac4-b2d08e348b1e' -p '51y8Q~Z65zXIl9VvlskSLdWF3wiqSnXgqH_yMb9f' --tenant 'd5d054a0-66ec-434f-88c2-0ac973a0dfb1'
               az Synapse trigger list --workspace-name synprod
               
-#       - name: PowerShell script
-#         # You may pin to the exact commit or the version.
-#         # uses: Amadevus/pwsh-script@97a8b211a5922816aa8a69ced41fa32f23477186
-#         uses: Amadevus/pwsh-script@v2.0.3
-#         with:
-#           # PowerShell script to execute in Actions-hydrated context
-#           azureSubscription: 'Free Trial'
-#           ScriptType: 'FilePath'
-#           script: './UpdateGlobalParameters.ps1'
-#           ScriptArguments: "-globalParametersFilePath './updated_config.json' -resourceGroupName 'dinesh' -workspaceName 'synprod'"
-#           azurePowerShellVersion: 'LatestVersion'
-#           enabled: true
-#          # globalParametersFilePath: './updated_config.json'
-#          # resourceGroupName: 'dinesh'
-#          # WorkspaceName: 'synprod'
-              
-            
-        
-      - uses: Azure/synapse-workspace-deployment@V1.7.0
+      - name: Synapse workspace deployment
+        uses: Azure/Synapse-workspace-deployment@V1.7.0
         with:
-          TargetWorkspaceName: 'syn1737'
-          ArtifactsFolder: './dev'
-          environment: 'Azure Public'
+          TargetWorkspaceName: 'synprod'
+          OverrideArmParameters: ./parameters.yml
+          ArtifactsFolder: ./dev
+          Environment: 'Azure Public'
           resourceGroup: 'dinesh'
           clientId: 'f55422ff-27d7-49e9-bac4-b2d08e348b1e'
           clientSecret: '51y8Q~Z65zXIl9VvlskSLdWF3wiqSnXgqH_yMb9f'
           subscriptionId: '56542616-48a1-4fd4-a9e2-947518afe39b'
           tenantId: 'd5d054a0-66ec-434f-88c2-0ac973a0dfb1'
           operation: 'validateDeploy'
-
-      - name: Generate templates
-        run: ./generate-templates.ps1
-
-      - name: Switch to workspace_publish branch
-        run: git checkout -B workspace_publish
-
-      - name: Copy templates and commit
-        run: |
-          cp -R generated-templates/* .
-          git add -A
-          git commit -m "Publish Synapse templates from GitHub Actions"
-
-      - name: Push templates to workspace_publish branch
-        run: git push --force origin workspace_publish
-     
-     # - name: Synapse workspace deployment
-     #   uses: Azure/Synapse-workspace-deployment@V1.7.0
-     #   with:
-     #     TargetWorkspaceName: 'synprod'
-     #     OverrideArmParameters: ./updated_config.json
-     #     Environment: 'Azure Public'
-     #     resourceGroup: 'dinesh'
-     #     clientId: 'f55422ff-27d7-49e9-bac4-b2d08e348b1e'
-     #     clientSecret: '51y8Q~Z65zXIl9VvlskSLdWF3wiqSnXgqH_yMb9f'
-     #     subscriptionId: '56542616-48a1-4fd4-a9e2-947518afe39b'
-     #     tenantId: 'd5d054a0-66ec-434f-88c2-0ac973a0dfb1'
-     #     operation: 'validateDeploy'
-
-            
-
-     
-#       - name: Install PowerShell
-#         run: |
-#               iex "& { $(irm https://aka.ms/install-powershell.ps1) }"
-              
-#       - name: Check PowerShell version
-#         run: |
-#           $PSVersionTable.PSVersion.ToString()
-          
-#       - name: Update Configuration
-#         run: |
-#           powershell -ExecutionPolicy Unrestricted -File ./update_script.ps1
