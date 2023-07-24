@@ -50,7 +50,13 @@
 				"inputs": [
 					{
 						"referenceName": "copy1",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"Test": {
+								"value": "@pipeline().parameters.test",
+								"type": "Expression"
+							}
+						}
 					}
 				],
 				"outputs": [
