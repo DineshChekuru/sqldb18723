@@ -50,7 +50,13 @@
 				"inputs": [
 					{
 						"referenceName": "copy1",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"Folder": {
+								"value": "Test",
+								"type": "Expression"
+							}
+						}
 					}
 				],
 				"outputs": [
