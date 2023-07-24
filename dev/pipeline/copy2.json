@@ -53,7 +53,7 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"Folder": {
-								"value": "@pipeline().parameters.test",
+								"value": "Test",
 								"type": "Expression"
 							}
 						}
