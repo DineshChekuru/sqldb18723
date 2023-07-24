@@ -1,3 +1,24 @@
-AppSecrets_properties_typeProperties_baseUrl: https://key1737.vault.azure.net/
-AzureDataLakeStorage1_properties_typeProperties_url: https://key1737.vault.azure.net/
-AzureKeyVault1_properties_typeProperties_baseUrl : https://key17.vault.azure.net/
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"workspaceName": {
+			"value": "syn1737"
+		},
+		"AzureDataLakeStorage1_accountKey": {
+			"value": ""
+		},
+		"syn1737-WorkspaceDefaultSqlServer_connectionString": {
+			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:syn1737.sql.azuresynapse.net,1433;Initial Catalog=@{linkedService().DBName}"
+		},
+		"AzureDataLakeStorage1_properties_typeProperties_url": {
+			"value": "https://synstr1737.dfs.core.windows.net/"
+		},
+		"AzureKeyVault1_properties_typeProperties_baseUrl": {
+			"value": "https://key1737.vault.azure.net/"
+		},
+		"syn1737-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://synstr1737.dfs.core.windows.net"
+		}
+	}
+}
