@@ -52,7 +52,7 @@
 						"referenceName": "copy1",
 						"type": "DatasetReference",
 						"parameters": {
-							"Test": {
+							"Folder": {
 								"value": "@pipeline().parameters.test",
 								"type": "Expression"
 							}
@@ -65,12 +65,31 @@
 						"type": "DatasetReference"
 					}
 				]
+			},
+			{
+				"name": "Set variable1",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "Test_Variable",
+					"value": "Test_Hello"
+				}
 			}
 		],
 		"parameters": {
 			"test": {
 				"type": "string",
 				"defaultValue": "hello"
+			}
+		},
+		"variables": {
+			"Test_Variable": {
+				"type": "String"
 			}
 		},
 		"annotations": []
