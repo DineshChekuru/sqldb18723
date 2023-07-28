@@ -35,9 +35,9 @@ jobs:
               if($syn.name -eq "Tiggerdev" -or $syn.name -eq "Triggersp"){
               az synapse trigger start --name $syn.name --workspace-name synprod
               }
-              #else{
-              #az synapse trigger stop --name $syn.name --workspace-name synprod
-              #}
+              else{
+              az synapse trigger start --name $syn.name --workspace-name synprod
+              }
               }
               
 #       - name: Synapse workspace deployment
