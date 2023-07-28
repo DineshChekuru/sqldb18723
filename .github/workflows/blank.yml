@@ -39,7 +39,17 @@ jobs:
           # Specify the script here
           inlineScript: 
            az login --service-principal -u 'f55422ff-27d7-49e9-bac4-b2d08e348b1e' -p '51y8Q~Z65zXIl9VvlskSLdWF3wiqSnXgqH_yMb9f' --tenant 'd5d054a0-66ec-434f-88c2-0ac973a0dfb1'
-            ./Trigger.sh
+            
+            
+      - name: Azure PowerShell Action
+        uses: Azure/powershell@v1
+        with:
+          # Specify the Az PowerShell script here.
+          inlineScript: ./Trigger.ps1
+          # Azure PS version to be used to execute the script, example: 1.8.0, 2.8.0, 3.4.0. To use the latest version, specify "latest".
+          azPSVersion: latest
+          # Select the value of the ErrorActionPreference variable for executing the script. Options: stop, continue, silentlyContinue. Default is Stop.
+          errorActionPreference: stop
          
             
               
