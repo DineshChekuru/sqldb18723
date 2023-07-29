@@ -27,9 +27,9 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
               
-#       - name: CLI Login
-#         run: |
-#               az login --service-principal -u 'f55422ff-27d7-49e9-bac4-b2d08e348b1e' -p '51y8Q~Z65zXIl9VvlskSLdWF3wiqSnXgqH_yMb9f' --tenant 'd5d054a0-66ec-434f-88c2-0ac973a0dfb1'
+      - name: CLI Login
+        run: |
+               az login --service-principal -u 'f55422ff-27d7-49e9-bac4-b2d08e348b1e' -p '51y8Q~Z65zXIl9VvlskSLdWF3wiqSnXgqH_yMb9f' --tenant 'd5d054a0-66ec-434f-88c2-0ac973a0dfb1'
 #               Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process -Force
              # ./Trigger.sh
               
@@ -41,29 +41,29 @@ jobs:
 #            az login --service-principal -u 'f55422ff-27d7-49e9-bac4-b2d08e348b1e' -p '51y8Q~Z65zXIl9VvlskSLdWF3wiqSnXgqH_yMb9f' --tenant 'd5d054a0-66ec-434f-88c2-0ac973a0dfb1'
             
             
-      - name: Azure PowerShell Action
-        uses: Azure/powershell@v1
-        with:
-          # Specify the Az PowerShell script here.
-          inlineScript: ./Trigger.ps1
-          # Azure PS version to be used to execute the script, example: 1.8.0, 2.8.0, 3.4.0. To use the latest version, specify "latest".
-          azPSVersion: latest
-          # Select the value of the ErrorActionPreference variable for executing the script. Options: stop, continue, silentlyContinue. Default is Stop.
-          errorActionPreference: stop
+#       - name: Azure PowerShell Action
+#         uses: Azure/powershell@v1
+#         with:
+#           # Specify the Az PowerShell script here.
+#           inlineScript: ./Trigger.ps1
+#           # Azure PS version to be used to execute the script, example: 1.8.0, 2.8.0, 3.4.0. To use the latest version, specify "latest".
+#           azPSVersion: latest
+#           # Select the value of the ErrorActionPreference variable for executing the script. Options: stop, continue, silentlyContinue. Default is Stop.
+#           errorActionPreference: stop
          
             
               
               
-#       - name: Synapse workspace deployment
-#         uses: Azure/Synapse-workspace-deployment@V1.7.0
-#         with:
-#           TargetWorkspaceName: 'synprod'
-#           OverrideArmParameters: ./parameters.yml
-#           ArtifactsFolder: ./dev
-#           Environment: 'Azure Public'
-#           resourceGroup: 'dinesh'
-#           clientId: 'f55422ff-27d7-49e9-bac4-b2d08e348b1e'
-#           clientSecret: '51y8Q~Z65zXIl9VvlskSLdWF3wiqSnXgqH_yMb9f'
-#           subscriptionId: '56542616-48a1-4fd4-a9e2-947518afe39b'
-#           tenantId: 'd5d054a0-66ec-434f-88c2-0ac973a0dfb1'
-#           operation: 'validateDeploy'
+      - name: Synapse workspace deployment
+        uses: Azure/Synapse-workspace-deployment@V1.7.0
+        with:
+          TargetWorkspaceName: 'synprod'
+          OverrideArmParameters: ./parameters.yml
+          ArtifactsFolder: ./dev
+          Environment: 'Azure Public'
+          resourceGroup: 'dinesh'
+          clientId: 'f55422ff-27d7-49e9-bac4-b2d08e348b1e'
+          clientSecret: '51y8Q~Z65zXIl9VvlskSLdWF3wiqSnXgqH_yMb9f'
+          subscriptionId: '56542616-48a1-4fd4-a9e2-947518afe39b'
+          tenantId: 'd5d054a0-66ec-434f-88c2-0ac973a0dfb1'
+          operation: 'validateDeploy'
