@@ -34,7 +34,7 @@ jobs:
         with:
           # Specify the Az PowerShell script here.
           inlineScript: |
-            $E = (get-childitem -path ".\dev").name
+            [System.Collections.ArrayList]$E = (get-childitem -path ".\dev").name
             $E.remove("trigger")
             copy-item -path ".\dev" -destination ".\prod" -filter $E
           # Azure PS version to be used to execute the script, example: 1.8.0, 2.8.0, 3.4.0. To use the latest version, specify "latest".
