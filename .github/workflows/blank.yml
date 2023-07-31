@@ -36,7 +36,7 @@ jobs:
           inlineScript: |
             [System.Collections.ArrayList]$E = (get-childitem -path ".\dev").name
             $E.remove("trigger")
-            write-host $E
+            write-host "This is for test" $E
             foreach($S in $E){
             copy-item -path ".\dev\$S" -destination ".\prod"}
           # Azure PS version to be used to execute the script, example: 1.8.0, 2.8.0, 3.4.0. To use the latest version, specify "latest".
