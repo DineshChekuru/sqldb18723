@@ -29,19 +29,19 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
       
-#       - name: Azure PowerShell Action
-#         uses: Azure/powershell@v1
-#         with:
-#           # Specify the Az PowerShell script here.
-#           inlineScript: |
-#             [System.Collections.ArrayList]$E = (get-childitem -path ".\dev").name
-#             $E.remove("trigger")
-#             copy-item -path ".\dev\*" -destination ".\prod" -Recurse -Force
-#             Write-Output "File copy process completed."
-#           # Azure PS version to be used to execute the script, example: 1.8.0, 2.8.0, 3.4.0. To use the latest version, specify "latest".
-#           azPSVersion: latest
-#           # Select the value of the ErrorActionPreference variable for executing the script. Options: stop, continue, silentlyContinue. Default is Stop.
-#           errorActionPreference: Stop
+      - name: Azure PowerShell Action
+        uses: Azure/powershell@v1
+        with:
+          # Specify the Az PowerShell script here.
+          inlineScript: |
+            [System.Collections.ArrayList]$E = (get-childitem -path ".\dev").name
+            $E.remove("trigger")
+            copy-item -path ".\dev\*" -destination ".\prod" -Recurse -Force
+            Write-Output "File copy process completed."
+          # Azure PS version to be used to execute the script, example: 1.8.0, 2.8.0, 3.4.0. To use the latest version, specify "latest".
+          azPSVersion: 5.1
+          # Select the value of the ErrorActionPreference variable for executing the script. Options: stop, continue, silentlyContinue. Default is Stop.
+          errorActionPreference: Stop
           
 #       - name: Copy Artifacts
 #         run: |
@@ -52,10 +52,10 @@ jobs:
 #           Move-Item -Path "$sourcePath\*" -Destination $destinationPath -Force
           
           
-      - name: Run PowerShell script
-        shell: pwsh
-        run: |
-          .\copy_files.ps1
+#       - name: Run PowerShell script
+#         shell: pwsh
+#         run: |
+#           .\copy_files.ps1
       
       
    #   - name: Create Artifacts Directory
