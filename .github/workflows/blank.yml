@@ -29,21 +29,21 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
       
-   #   - name: Create Artifacts Directory
-   #     run: |
-   #       New-Item -ItemType Directory -Force -Path (Join-Path ${{ github.workspace }} 'artifacts')
+      - name: Create Artifacts Directory
+        run: |
+          New-Item -ItemType Directory -Force -Path (Join-Path ${{ github.workspace }} 'artifacts')
           
-   #   - name: Copy Artifacts
-   #     run: |
-   #       $sourcePath = "${{ github.workspace }}\dev"
-   #       $destinationPath = (Join-Path ${{ github.workspace }} 'artifacts')
-   #      Copy-Item -Path "$sourcePath\*" -Destination $destinationPath -Recurse -Force
+      - name: Copy Artifacts
+        run: |
+          $sourcePath = "${{ github.workspace }}\dev"
+          $destinationPath = (Join-Path ${{ github.workspace }} 'artifacts')
+          Copy-Item -Path "$sourcePath\*" -Destination $destinationPath -Recurse -Force
           
-   #   - name: Upload Build Artifacts
-   #     uses: actions/upload-artifact@v2
-   #     with:
-   #       name: buildlogs
-   #       path: ${{ github.workspace }}\artifacts\
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: buildlogs
+          path: ${{ github.workspace }}\artifacts\
               
       - name: CLI Login
         run: |
@@ -65,20 +65,27 @@ jobs:
 #          # globalParametersFilePath: './updated_config.json'
 #          # resourceGroupName: 'dinesh'
 #          # WorkspaceName: 'synprod'
+
+      - name: Download Build Artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: buildlogs
+          path: ${{ github.workspace }}/buildlogs
+
               
             
         
-#       - uses: Azure/synapse-workspace-deployment@V1.7.0
-#         with:
-#           TargetWorkspaceName: 'syn1737'
-#           ArtifactsFolder: './dev'
-#           environment: 'Azure Public'
-#           resourceGroup: 'dinesh'
-#           clientId: 'f55422ff-27d7-49e9-bac4-b2d08e348b1e'
-#           clientSecret: '51y8Q~Z65zXIl9VvlskSLdWF3wiqSnXgqH_yMb9f'
-#           subscriptionId: '56542616-48a1-4fd4-a9e2-947518afe39b'
-#           tenantId: 'd5d054a0-66ec-434f-88c2-0ac973a0dfb1'
-#           operation: 'validateDeploy'
+      - uses: Azure/synapse-workspace-deployment@V1.7.0
+        with:
+          TargetWorkspaceName: 'syn1737'
+          ArtifactsFolder: ${{ github.workspace }}/buildlogs
+          environment: 'Azure Public'
+          resourceGroup: 'dinesh'
+          clientId: 'f55422ff-27d7-49e9-bac4-b2d08e348b1e'
+          clientSecret: '51y8Q~Z65zXIl9VvlskSLdWF3wiqSnXgqH_yMb9f'
+          subscriptionId: '56542616-48a1-4fd4-a9e2-947518afe39b'
+          tenantId: 'd5d054a0-66ec-434f-88c2-0ac973a0dfb1'
+          operation: 'validateDeploy'
 
 #       - name: Generate templates
 #         run: ./generate-templates.ps1
