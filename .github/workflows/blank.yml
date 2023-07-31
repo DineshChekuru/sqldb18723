@@ -36,7 +36,7 @@ jobs:
           inlineScript: |
             [System.Collections.ArrayList]$E = (get-childitem -path ".\dev").name
             $E.remove("trigger")
-            copy-item -path ".\dev\*" -destination ".\prod\qa" -recurse
+            copy-item -path "${{ github.workspace }}\dev\*" -destination ".\prod" -recurse
             Write-Output "File copy process completed."
           # Azure PS version to be used to execute the script, example: 1.8.0, 2.8.0, 3.4.0. To use the latest version, specify "latest".
           azPSVersion: latest
