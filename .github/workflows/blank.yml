@@ -46,8 +46,11 @@ jobs:
       - name: Copy Artifacts
         run: |
           $sourcePath = "${{ github.workspace }}\dev"
-          $destinationPath = (Join-Path ${{ github.workspace }} 'prod')
+          get-childitem -path $sourcePath
+          $destinationPath = "${{ github.workspace }}\prod"
+          get-childitem -path $destinationPath
           Copy-Item -Path "$sourcePath\*" -Destination $destinationPath -Recurse -Force
+          
           
 #       - name: Azure PowerShell Action
 #         uses: Azure/powershell@v1
