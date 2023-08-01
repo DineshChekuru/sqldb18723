@@ -1,0 +1,314 @@
+{
+	"name": "CDS_daily_load",
+	"properties": {
+		"folder": {
+			"name": "CDS"
+		},
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "apsmaddev01",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "56g",
+			"driverCores": 8,
+			"executorMemory": "56g",
+			"executorCores": 8,
+			"numExecutors": 2,
+			"runAsWorkspaceSystemIdentity": false,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "0ad2714b-52f2-4176-9d4c-f0722f8b35a9"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"enableDebugMode": false,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "Synapse PySpark"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/5a820b59-1e08-41d5-9963-3447819271db/resourceGroups/rg-tccc-marketing-analytics-cx-dev/providers/Microsoft.Synapse/workspaces/syn-tccc-mad-use2-dev-01/bigDataPools/apsmaddev01",
+				"name": "apsmaddev01",
+				"type": "Spark",
+				"endpoint": "https://syn-tccc-mad-use2-dev-01.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/apsmaddev01",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "3.1",
+				"nodeCount": 10,
+				"cores": 8,
+				"memory": 56,
+				"automaticScaleJobs": false
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"source": [
+					"import pandas as pd\r\n",
+					"from notebookutils import mssparkutils"
+				],
+				"execution_count": 1
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"#STORAGE_ACCOUNT_NAME      =  \"sause2tcccmaddev0001\"                  # ADLS Storage account\r\n",
+					"#DATA_CONTAINER_NAME       =  \"cxanalytics-raw\"                       # container in which Raw data has to be placed\r\n",
+					"#DATA_CONTAINER_NAME_CUR   =  \"cxanalytics-curated\"                   # container in which Curated data has to be placed\r\n",
+					""
+				],
+				"execution_count": 2
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"tags": [
+						"parameters"
+					]
+				},
+				"source": [
+					"password_key = \"password\"\r\n",
+					"storage_account = \"storage_account_name\"\r\n",
+					"raw_container = \"data_container_name\"\r\n",
+					"curated_container = \"data_container_name_cur\"\r\n",
+					"jdbcHostname = \"host_name\"\r\n",
+					"jdbcDatabase = \"database_name\"\r\n",
+					"jdbcPort = \"port\"\r\n",
+					"username = \"user\""
+				],
+				"execution_count": 3
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"def writeSingleCsvFile(dataframe, filePrefix, fileName):\r\n",
+					"    tempFolderPrefix = filePrefix + fileName\r\n",
+					"    dataframe.coalesce(1).write.option(\"header\", \"true\").option(\"encoding\", \"UTF-8\").option(\"escape\", \"\\\"\").csv(tempFolderPrefix + \".tmp\")\r\n",
+					"    path_list = mssparkutils.fs.ls(tempFolderPrefix+\".tmp\")\r\n",
+					"    mod_path = [x for x in path_list if x.path.endswith('.csv')][0].path\r\n",
+					"    mssparkutils.fs.cp(mod_path, tempFolderPrefix + \".csv\")\r\n",
+					"    mssparkutils.fs.rm(tempFolderPrefix+\".tmp\",recurse = True)\r\n",
+					"    print(\"Done\")"
+				],
+				"execution_count": 3
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"from functools import reduce\r\n",
+					"import pycountry\r\n",
+					"from datetime import datetime, timedelta\r\n",
+					"from pyspark.sql.types import *\r\n",
+					"from pyspark.sql import DataFrame\r\n",
+					"from pyspark.sql.functions import *\r\n",
+					"from pyspark.sql.functions import col, lit, regexp_replace, regexp_extract, initcap, when\r\n",
+					"spark.conf.set(\"spark.sql.execution.arrow.pyspark.enabled\", \"false\")\r\n",
+					"def dailyload():\r\n",
+					"    yesterday = datetime.now() - timedelta(2)\r\n",
+					"    date = datetime.strftime(yesterday, \"%m%d%Y\")\r\n",
+					"    newdate = datetime.strftime(yesterday, \"%m-%d-%Y\")\r\n",
+					"    file_relative_path        =  \"/CDS/{}/\".format(date)\r\n",
+					"    desired_date_folder_path = 'abfss://%s@%s.dfs.core.windows.net/%s' % (raw_container, storage_account, file_relative_path)\r\n",
+					"\r\n",
+					"    print(desired_date_folder_path)\r\n",
+					"    try:\r\n",
+					"        desired_date_files = mssparkutils.fs.ls(desired_date_folder_path)\r\n",
+					"        print(desired_date_files)\r\n",
+					"    except Exception as e:\r\n",
+					"        print(\"{} folder does not yet exist\".format(desired_date_folder_path))\r\n",
+					"        raise e\r\n",
+					"    else:\r\n",
+					"        fileNames = []\r\n",
+					"        lst = ['APAC', 'CDS_NA', 'EMEA', 'LATAM','LATAM_B2C']\r\n",
+					"        for i in desired_date_files:\r\n",
+					"            fileNames.append(i.name)\r\n",
+					"        print(fileNames)\r\n",
+					"\r\n",
+					"\r\n",
+					"\r\n",
+					"    if not fileNames:\r\n",
+					"        mssparkutils.notebook.exit('stop')\r\n",
+					"    else:\r\n",
+					"        output = []\r\n",
+					"        descripency_file_list = []\r\n",
+					"        for file in fileNames:\r\n",
+					"            df = spark.read.format(\"csv\").option(\"header\", \"true\").load(desired_date_folder_path+\"/\"+file)\r\n",
+					"            extracted_cols = df.columns\r\n",
+					"            req_cols = [\"PropertyName\",\"Country\",\"Age\",\"Registrations\",\"UniqueLoggedIn\",\"Marketing\",\"Personalization\"]\r\n",
+					"            lst1 = []\r\n",
+					"            for i in req_cols:\r\n",
+					"                if i in extracted_cols:\r\n",
+					"                    continue\r\n",
+					"                else:\r\n",
+					"                    print(i,\"column missing in {}\".format(file))\r\n",
+					"                    lst1.append(file)\r\n",
+					"                    descripency_file_list.append(file)\r\n",
+					"\r\n",
+					"            if len(set(lst1)) == 0:\r\n",
+					"                print(\"{} schema is good\".format(file))\r\n",
+					"\r\n",
+					"                if \"Logins\" not in df.columns:\r\n",
+					"                    df = df.withColumn(\"Logins\", lit(0))\r\n",
+					"                if \"newUsers\" not in df.columns:\r\n",
+					"                    df = df.withColumn(\"newUsers\", lit(0))\r\n",
+					"                    print(df)\r\n",
+					"                #df = df.withColumn(\"newUsers\",df.newUsers.cast('int')).withColumn(\"Registrations\",df.Registrations.cast('int')).withColumn(\"Marketing\",df.Marketing.cast('int')).withColumn(\"UniqueLoggedIn\",df.UniqueLoggedIn.cast('int')).withColumn(\"Personalization\",df.Personalization.cast('int')).withColumn(\"Age\",df.Age.cast('int')).withColumn(\"Logins\",df.Logins.cast('int')).select(\"PropertyName\", \"Country\", \"Age\", \"Registrations\",\"newUsers\",\"Logins\", \"UniqueLoggedIn\", \"Marketing\", \"Personalization\")\r\n",
+					"                df1 = df.select(\"PropertyName\", \"Country\", \"Age\", \"Registrations\",\"newUsers\",\"Logins\", \"UniqueLoggedIn\", \"Marketing\", \"Personalization\")\r\n",
+					"                df = df1\r\n",
+					"                if df.count() == 0:\r\n",
+					"                    print(\"{} file is empty\".format(file))\r\n",
+					"\r\n",
+					"                else:\r\n",
+					"                    if \"UniqueLoggedIn\" not in df.columns:\r\n",
+					"                        df = df.withColumn(\"UniqueLoggedIn\", lit(None))\r\n",
+					"                    output.append(df) \r\n",
+					"            \r\n",
+					"\r\n",
+					"    finaloutput = reduce(DataFrame.unionAll, output).select(\"PropertyName\", \"Country\", \"Age\", \"Registrations\",\"newUsers\",\"Logins\", \"UniqueLoggedIn\", \"Marketing\", \"Personalization\")\r\n",
+					"    a = finaloutput.select(\"Country\").rdd.flatMap(lambda x:x).collect()\r\n",
+					"    b = []\r\n",
+					"    df2 = finaloutput.toPandas()\r\n",
+					"    \r\n",
+					"    df2['PropertyName1'] = df2['PropertyName']\r\n",
+					"    finaloutput = spark.createDataFrame(df2)\r\n",
+					"    finaloutput = finaloutput.withColumn(\"newUsers\",finaloutput.newUsers.cast('int')).withColumn(\"Registrations\",finaloutput.Registrations.cast('int')).withColumn(\"Marketing\",finaloutput.Marketing.cast('int')).withColumn(\"UniqueLoggedIn\",finaloutput.UniqueLoggedIn.cast('int')).withColumn(\"Personalization\",finaloutput.Personalization.cast('int')).withColumn(\"Age\",finaloutput.Age.cast('int')).withColumn(\"Logins\",finaloutput.Logins.cast('int')).select(\"PropertyName\", \"Country\", \"Age\", \"Registrations\",\"newUsers\",\"Logins\", \"UniqueLoggedIn\", \"Marketing\", \"Personalization\")\r\n",
+					"    finaldata = finaloutput.withColumn(\"Date\", lit(newdate)).withColumn(\"Campaign_Name\", regexp_replace(col(\"PropertyName\"), \"^([a-z]([a-z]))-|^([A-Z]([A-Z]))_|^cds-prod-|_Prod_|^cds-proc-|cds_prod_|fooding-prod-pl-|cds-|prod-|cid-|fabryka-|vsf-|ukladajhist2-|us.|www.\", \"\")).withColumn(\"start_date\", regexp_extract(\"PropertyName\",\"((?:\\d{1,2})?(?:|-)?(?:\\d{1,2}?|jan(?:uary)?|feb(?:ruaury)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sep(?:t)?(?:ember)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)?(?:|-)?(?:\\d{1,2})?(?:\\d{4}))\",1)).withColumn(\"campaign_name\", regexp_extract(\"campaign_name\",'(\\w*)(?:|.|-|_)',1)).withColumn(\"campaign_name\", regexp_replace(col(\"campaign_name\"),\"2022|2021|2020|2019|2018|2017\",\"\")).withColumn(\"Campaign_Name\", regexp_replace(col(\"Campaign_Name\"),\"cca\",\"Coca-Cola App Europe\")).withColumn(\"Campaign_Name\", regexp_replace(col(\"Campaign_Name\"),\"cokenmeals\",\"cokemeals\")).withColumn(\"Campaign_Name\", regexp_replace(col(\"Campaign_Name\"),\"Peru\",\"cokemeals\")).withColumn(\"Campaign_Name\", regexp_replace(col(\"Campaign_Name\"),\"turkey\",\"dahadaha\")).withColumn(\"Campaign_Name\", regexp_replace(col(\"Campaign_Name\"),\"extrazone\",\"dahadaha extrazone\")).withColumn(\"Campaign_Name\", regexp_replace(col(\"Campaign_Name\"),\"fusetea\",\"fuzetea\")).withColumn(\"Campaign_Name\", regexp_replace(col(\"Campaign_Name\"),\"fuzeteaxm\",\"fuzetea\")).withColumn(\"Campaign_Name\", regexp_replace(col(\"Campaign_Name\"),\"fthalloween\",\"halloween\")).withColumn(\"Campaign_Name\", regexp_replace(col(\"Campaign_Name\"),\"futea\",\"fuzetea\")).withColumn(\"Campaign_Name\", regexp_replace(col(\"Campaign_Name\"),\"wtf_be_22feb\",\"whatthefanta\")).withColumn(\"Campaign_Name\", regexp_replace(col(\"Campaign_Name\"),\"olnbweb\",\"olnb\")).withColumn(\"Campaign_Name\", regexp_replace(col(\"Campaign_Name\"),\"olnbone\",\"olnb\")).withColumn(\"Campaign_Name\", regexp_replace(col(\"Campaign_Name\"),\"register\",\"other\")).withColumn(\"Campaign_Name\", regexp_replace(col(\"Campaign_Name\"),\"SMOKE_TEST\",\"other\")).withColumn(\"Campaign_Name\", regexp_replace(col(\"Campaign_Name\"),\"CCETH\",\"entuhogar\")).withColumn(\"Campaign_Name\", regexp_replace(col(\"Campaign_Name\"),\"premleague\",\"premierleague\")).withColumn(\"Campaign_Name\", regexp_replace(col(\"Campaign_Name\"),\"summer19pl\",\"summer\")).withColumn(\"Campaign_Name\", regexp_replace(col(\"Campaign_Name\"),\"cceth\",\"entuhogar\")).withColumn(\"Campaign_Name\", regexp_replace(col(\"Campaign_Name\"),\"dietcokeexpdpia\",\"dietcoke\")).withColumn(\"Campaign_Name\", regexp_replace(col(\"Campaign_Name\"),\"LATAM\",\"regsitelatam\")).withColumn(\"Campaign_Name\", regexp_replace(col(\"Campaign_Name\"),\"native\",\"nativeapp\")).withColumn(\"Campaign_Name\", regexp_replace(col(\"Campaign_Name\"),\"navidadcon100m\",\"naviadadcon\")).withColumn(\"Campaign_Name\", regexp_replace(col(\"Campaign_Name\"),\"navidadcontgb\",\"naviadadcon\")).withColumn(\"Campaign_Name\", regexp_replace(col(\"Campaign_Name\"),\"coca\",\"coca-cola\")).withColumn(\"Campaign_Name\", regexp_replace(col(\"Campaign_Name\"),\"hi\",\"hi-c\")).withColumn(\"Campaign_Name\", regexp_replace(col(\"Campaign_Name\"),\"pibb\",\"pibb-xtra\")).withColumn(\"Campaign_Name\", regexp_replace(col(\"Campaign_Name\"),\"Norway\",\"summer\")).withColumn(\"Country\", regexp_replace(col(\"Country\"),\"UAE\",\"United Arab Emirates\")).withColumn(\"Country\", regexp_replace(col(\"Country\"),\"United_Kingdom\",\"Great Britain\")).withColumn(\"Country\", regexp_replace(col(\"Country\"),\"Sierra_Leone\",\"Slovenia\")).withColumn(\"Country\", regexp_replace(col(\"Country\"),\"_\",\" \")).withColumn(\"Country\", regexp_replace(col(\"Country\"),\"_\",\" \")).withColumn(\"Country\", regexp_replace(col(\"Country\"),\"Brasil\",\"Brazil\")).withColumn(\"start_date\", regexp_replace(col(\"start_date\"),\"-\",\"\")).select(\"PropertyName\",initcap(\"Campaign_name\"), \"Start_date\", \"Country\", \"Date\", \"Age\", \"Registrations\",\"newUsers\",\"Logins\", \"UniqueLoggedIn\", \"Marketing\", \"Personalization\").dropDuplicates()\r\n",
+					"    finaldata = finaldata.filter((col(\"Age\") > 13) & (col(\"Age\") < 99) | (col(\"Age\").isNull()) | (col(\"Age\") == \"\"))\r\n",
+					"    print(finaldata.columns)\r\n",
+					"    finaldata = finaldata.withColumn(\"initcap(Campaign_name)\", when(finaldata[\"PropertyName\"] == \"us.coca-cola.com/cokestudio\", \"Cokestudio\").otherwise(finaldata[\"initcap(Campaign_name)\"]))\r\n",
+					"    finaldata = finaldata.withColumn(\"initcap(Campaign_name)\", when(finaldata[\"PropertyName\"] == \"CokeStudioIndia\", \"CokeStudio23 \").otherwise(finaldata[\"initcap(Campaign_name)\"]))\r\n",
+					"\r\n",
+					"    finaldata = finaldata.withColumnRenamed(\"initcap(Campaign_Name)\",\"Campaign_name\")    \r\n",
+					"    file_relative_path_cur        =  \"/CDS/\"\r\n",
+					"    desired_date_folder_path_cur = 'abfss://%s@%s.dfs.core.windows.net/%s' % (curated_container, storage_account, file_relative_path_cur)\r\n",
+					"    #print(desired_date_folder_path_cur)\r\n",
+					"    historydata = spark.read.csv(desired_date_folder_path_cur+\"cds_agg_output.csv\", header = True)\r\n",
+					"    \r\n",
+					"\r\n",
+					"    output = finaldata.dropDuplicates()\r\n",
+					"    #writeSingleCsvFile(output, desired_date_folder_path_cur, \"cds_agg_output\")\r\n",
+					"\r\n",
+					"    \r\n",
+					"\r\n",
+					"    #jdbcHostname = host_name \r\n",
+					"    #jdbcDatabase = database_name\r\n",
+					"    #jdbcPort = port\r\n",
+					"    #username = user\r\n",
+					"    password = password_key\r\n",
+					"    jdbcUrl = \"jdbc:sqlserver://{0}:{1};database={2}\".format(jdbcHostname, jdbcPort, jdbcDatabase)\r\n",
+					"\r\n",
+					"    connectionProperties = {\r\n",
+					"        \"user\" : username,\r\n",
+					"        \"password\" : password,\r\n",
+					"        \"driver\" : \"com.microsoft.sqlserver.jdbc.SQLServerDriver\"\r\n",
+					"        }\r\n",
+					"    \r\n",
+					"    dbtable = \"CURATED.CDS\"\r\n",
+					"    finaldata.write \\\r\n",
+					"        .format(\"com.microsoft.sqlserver.jdbc.spark\") \\\r\n",
+					"        .mode(\"append\") \\\r\n",
+					"        .option(\"url\", jdbcUrl) \\\r\n",
+					"        .option(\"dbtable\", dbtable) \\\r\n",
+					"        .option(\"user\", username) \\\r\n",
+					"        .option(\"password\", password) \\\r\n",
+					"        .option(\"header\", \"True\") \\\r\n",
+					"        .option(\"mssqlIsolationLevel\", \"READ_UNCOMMITTED\") \\\r\n",
+					"        .save()\r\n",
+					"    print(\"Done\")\r\n",
+					"\r\n",
+					"    dbtable1 = \"HUB.CDS\"\r\n",
+					"    finaldata.write \\\r\n",
+					"        .format(\"com.microsoft.sqlserver.jdbc.spark\") \\\r\n",
+					"        .mode(\"append\") \\\r\n",
+					"        .option(\"url\", jdbcUrl) \\\r\n",
+					"        .option(\"dbtable\", dbtable1) \\\r\n",
+					"        .option(\"user\", username) \\\r\n",
+					"        .option(\"password\", password) \\\r\n",
+					"        .option(\"header\", \"True\") \\\r\n",
+					"        .option(\"mssqlIsolationLevel\", \"READ_UNCOMMITTED\") \\\r\n",
+					"        .save()\r\n",
+					"    print(\"Done\")\r\n",
+					"\r\n",
+					"    if len(set(descripency_file_list)) == 0:\r\n",
+					"        print(\"All files are good\")\r\n",
+					"    else:\r\n",
+					"        mssparkutils.notebook.exit(list(set(descripency_file_list)))\r\n",
+					"\r\n",
+					"   "
+				],
+				"execution_count": 2
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"dailyload()"
+				],
+				"execution_count": 7
+			}
+		]
+	}
+}
