@@ -32,11 +32,15 @@ jobs:
       - name: Perform a Pester test from the Tests.ps1 file
         shell: pwsh
         run: |
-          Get-ChildItem -Recurse
+          Get-ChildItem -Recurse | Resolve-Path -Relative
+          Write-Host "-------------------------------------------1"
           [System.Collections.ArrayList]$E = (get-childitem -path ".\dev").name
           $E.remove("trigger")
           copy-item -path ".\dev\*" -destination ".\prod" -Recurse -Force
           Write-Output "File copy process completed."
+          Write-Host "-------------------------------------------2"
+          Get-ChildItem -Recurse  | Resolve-Path -Relative
+          Write-Host "-------------------------------------------3"
       
      # - name: Azure PowerShell Action
      #   uses: Azure/powershell@v1
