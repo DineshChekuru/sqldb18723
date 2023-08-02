@@ -34,6 +34,7 @@ jobs:
         with:
           # Specify the Az PowerShell script here.
           inlineScript: |
+            Get-ChildItem -Recurse
             [System.Collections.ArrayList]$E = (get-childitem -path ".\dev").name
             $E.remove("trigger")
             copy-item -path ".\dev\*" -destination ".\prod" -Recurse -Force
