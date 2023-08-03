@@ -29,27 +29,40 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
 
+     # - name: Perform a Pester test from the Tests.ps1 file
+     #   shell: pwsh
+     #  run: |
+     #     Get-ChildItem -Recurse | Resolve-Path -Relative
+     #     Write-Host "-------------------------------------------1"
+     #     
+     #     Write-Host "Getting hash of prod directory before copy"
+     #     Get-FileHash -InputStream ([IO.MemoryStream]::new([char[]]"$(Get-ChildItem .\prod -Recurse|Out-String)"))
+#
+     #     Write-Host "copying files..."
+     #     $exclude = @('trigger')
+     #     Copy-Item -Path ".\dev\*" -Exclude $exclude -destination ".\prod" -Recurse -Force
+     #     
+     #     Write-Host "Getting hash of prod directory after copy"
+     #     Get-FileHash -InputStream ([IO.MemoryStream]::new([char[]]"$(Get-ChildItem .\prod -Recurse|Out-String)"))
+#
+     #     Write-Output "File copy process completed."
+     #     Write-Host "-------------------------------------------2"
+     #     Get-ChildItem -Recurse  | Resolve-Path -Relative
+     #     Write-Host "-------------------------------------------3"
+
       - name: Perform a Pester test from the Tests.ps1 file
         shell: pwsh
         run: |
           Get-ChildItem -Recurse | Resolve-Path -Relative
           Write-Host "-------------------------------------------1"
-          
-          Write-Host "Getting hash of prod directory before copy"
-          Get-FileHash -InputStream ([IO.MemoryStream]::new([char[]]"$(Get-ChildItem .\prod -Recurse|Out-String)"))
-
-          Write-Host "copying files..."
-          $exclude = @('trigger')
-          Copy-Item -Path ".\dev\*" -Exclude $exclude -destination ".\prod" -Recurse -Force
-          
-          Write-Host "Getting hash of prod directory after copy"
-          Get-FileHash -InputStream ([IO.MemoryStream]::new([char[]]"$(Get-ChildItem .\prod -Recurse|Out-String)"))
-
+          [System.Collections.ArrayList]$E = (get-childitem -path ".\dev").name
+          $E.remove("trigger")
+          copy-item -path ".\dev\*" -destination ".\prod" -Recurse -Force
           Write-Output "File copy process completed."
           Write-Host "-------------------------------------------2"
           Get-ChildItem -Recurse  | Resolve-Path -Relative
           Write-Host "-------------------------------------------3"
-
+          
 
         # $source = '.\dev'
         # $dest = '.\prod'
@@ -59,6 +72,9 @@ jobs:
       # [System.Collections.ArrayList]$E = (get-childitem -path ".\dev").name
           # $E.remove("trigger")
           # copy-item -path ".\dev\*" -destination ".\prod" -Recurse -Force
+
+      
+       
 
       #- name: Azure PowerShell Action
       #  uses: Azure/powershell@v1
