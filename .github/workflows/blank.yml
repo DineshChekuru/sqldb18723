@@ -41,7 +41,7 @@ jobs:
         with:
           # mail server settings
           server_address: smtp.gmail.com
-          server_port: 587
+          server_port: 465
           # user credentials
           username: "sumanku1737@gmail.com"
           password: "Suman@1737"
