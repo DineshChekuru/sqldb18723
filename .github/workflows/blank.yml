@@ -36,7 +36,7 @@ jobs:
           echo test, and deploy your project.
 
       - name: Send mail
-        if: failure()
+        if: Success()
         uses: dawidd6/action-send-mail@v2
         with:
           # mail server settings
