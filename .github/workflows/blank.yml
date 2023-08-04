@@ -43,8 +43,8 @@ jobs:
           server_address: smtp.gmail.com
           server_port: 587
           # user credentials
-          username: ${{ secrets.EMAIL_USERNAME }}
-          password: ${{ secrets.EMAIL_PASSWORD }}
+          username: "sumanku1737@gmail.com"
+          password: "Suman@1737"
           # email subject
           subject: ${{ github.job }} job of ${{ github.repository }} has ${{ job.status }}
           # email body as text
@@ -52,4 +52,4 @@ jobs:
           # comma-separated string, send email to
           to: dchekuru@gmail.com,srinivass465@gmail.com
           # from email name
-          from: ${{ secrets.EMAIL_USERNAME }}
+          from: "sumanku1737@gmail.com"
