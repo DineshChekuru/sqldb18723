@@ -47,6 +47,9 @@ jobs:
             Get-ChildItem -Recurse  | Resolve-Path -Relative
             Write-Host "-------------------------------------------3"
 
+      - name: Debug Step 1
+        run: echo "Debugging Step 1"
+
       - name: Setup Git for Windows' minimal SDK
         uses: git-for-windows/setup-git-for-windows-sdk@v1
 
