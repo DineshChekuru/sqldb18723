@@ -50,6 +50,9 @@ jobs:
       - name: Setup Git for Windows' minimal SDK
         uses: git-for-windows/setup-git-for-windows-sdk@v1
 
+      - name: Debug Step 2
+        run: echo "Debugging Step 2"
+
       - uses: EndBug/add-and-commit@v9
         with:
           message: '[skip actions] Auto commit to version prod artifacts'
