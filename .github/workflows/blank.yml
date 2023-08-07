@@ -50,4 +50,4 @@ jobs:
           cd sqldb18723
           & "C:\Program Files\Git\bin\git.exe" add .
           & "C:\Program Files\Git\bin\git.exe" commit -m "latest"
-          & "C:\Program Files\Git\bin\git.exe" origin dinesh_feature
+          & "C:\Program Files\Git\bin\git.exe" push
