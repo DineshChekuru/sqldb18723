@@ -5,8 +5,8 @@ name: Copy from dev to prod
 # Controls when the workflow will run
 on:
   # Triggers the workflow on push or pull request events but only for the "syn-pipelines-dev-prod" branch
-  #push:
-  #  branches: [ "dinesh_feature" ]
+  push:
+    branches: [ "dinesh_feature" ]
   #pull_request:
   #  branches: [ "dinesh_feature" ]
 
@@ -37,7 +37,7 @@ jobs:
       - name: Azure PowerShell Action
         uses: Azure/powershell@v1
         with:
-          inlineScript: |
+          inlineScript: | 
             .\config.ps1
         
             # Azure PS version to be used to execute the script, example: 1.8.0, 2.8.0, 3.4.0. To use the latest version, specify "latest".
@@ -47,6 +47,7 @@ jobs:
 
       - name: Run Git commands
         run: |
+          cd sqldb18723
           "C:\Program Files\Git\bin\git.exe" add .
           "C:\Program Files\Git\bin\git.exe" commit -m "latest"
-          "C:\Program Files\Git\bin\git.exe" --force origin Dinesh-syn-pipelines-dev-prod-24723
+          "C:\Program Files\Git\bin\git.exe" --force origin dinesh_feature
