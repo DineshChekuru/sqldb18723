@@ -32,4 +32,4 @@ jobs:
       
       - name: Run Git commands
         run: |
-          & "C:\Program Files\Git\bin\git.exe" clone https://github.com/The-Coca-Cola-Company/CXAnalytics-Synapsepipelines.git -b Dinesh-syn-pipelines-dev-prod-24723
+          & "C:\Program Files\Git\bin\git.exe" clone https://github.com/DineshChekuru/sqldb18723.git -b dinesh_feature
