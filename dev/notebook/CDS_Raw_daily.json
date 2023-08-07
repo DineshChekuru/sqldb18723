@@ -1,0 +1,54 @@
+{
+	"name": "CDS_Raw_daily",
+	"properties": {
+		"folder": {
+			"name": "CDS"
+		},
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "apsmaddev01",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "56g",
+			"driverCores": 8,
+			"executorMemory": "56g",
+			"executorCores": 8,
+			"numExecutors": 2,
+			"runAsWorkspaceSystemIdentity": false,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "8abc9863-3cd9-4d6b-ad58-c02307fd30a1"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"enableDebugMode": false,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "Synapse PySpark"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/5a820b59-1e08-41d5-9963-3447819271db/resourceGroups/rg-tccc-marketing-analytics-cx-dev/providers/Microsoft.Synapse/workspaces/syn-tccc-mad-use2-dev-01/bigDataPools/apsmaddev01",
+				"name": "apsmaddev01",
+				"type": "Spark",
+				"endpoint": "https://syn-tccc-mad-use2-dev-01.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/apsmaddev01",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net",
+					"authHeader": null
+				},
+				"sparkVersion": "3.1",
+				"nodeCount": 10,
+				"cores": 8,
+				"memory": 56,
+				"extraHeader": null
+			},
+			"sessionKeepAliveTimeout": 30
+		},
