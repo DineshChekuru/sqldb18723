@@ -29,36 +29,7 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
-
-      - name: Copying files from Dev to Prod directory...
-        shell: pwsh
+      
+      - name: Run Git commands
         run: |
-            Get-ChildItem -Recurse | Resolve-Path -Relative
-            Write-Host "-------------------------------------------1"
-            Write-Host "Getting hash of prod directory before copy"
-            Get-FileHash -InputStream ([IO.MemoryStream]::new([char[]]"$(Get-ChildItem .\prod -Recurse|Out-String)"))
-            Write-Host "copying files..."
-            $exclude = @('trigger')
-            Copy-Item -Path ".\dev\*" -Exclude $exclude -destination ".\prod" -Recurse -Force
-            Write-Host "Getting hash of prod directory after copy"
-            Get-FileHash -InputStream ([IO.MemoryStream]::new([char[]]"$(Get-ChildItem .\prod -Recurse|Out-String)"))
-            Write-Output "File copy process completed."
-            Write-Host "-------------------------------------------2"
-            Get-ChildItem -Recurse  | Resolve-Path -Relative
-            Write-Host "-------------------------------------------3"
-
-      - name: Debug Step 1
-        run: echo "Debugging Step 1"
-
-      - name: Setup Git for Windows' minimal SDK
-        uses: git-for-windows/setup-git-for-windows-sdk@v1
-
-      - name: Debug Step 2
-        run: echo "Debugging Step 2"
-
-      - uses: EndBug/add-and-commit@v9
-        with:
-          message: '[skip actions] Auto commit to version prod artifacts'
-          committer_name: 'GitHub Actions'
-          committer_email: 'actions@github.com'
-          push: true
+          & "C:\Program Files\Git\bin\git.exe" clone https://github.com/The-Coca-Cola-Company/CXAnalytics-Synapsepipelines.git -b Dinesh-syn-pipelines-dev-prod-24723
