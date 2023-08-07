@@ -6,9 +6,9 @@ name: Copy from dev to prod
 on:
   # Triggers the workflow on push or pull request events but only for the "syn-pipelines-dev-prod" branch
   push:
-    branches: [ "feature" ]
+    branches: [ "dinesh_feature" ]
   #pull_request:
-  #  branches: [ "feature" ]
+  #  branches: [ "dinesh_feature" ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
