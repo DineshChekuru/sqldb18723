@@ -32,7 +32,7 @@ jobs:
       
       - name: Run Git commands
         run: |
-          rm rf sqldb18723
+          rm -rf sqldb18723
           & "C:\Program Files\Git\bin\git.exe" clone https://github.com/DineshChekuru/sqldb18723.git -b dinesh_feature
 
       - name: Azure PowerShell Action
