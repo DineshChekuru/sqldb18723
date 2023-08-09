@@ -3,4 +3,5 @@
               if($syn.name -eq "Trigger"){
               az synapse trigger start --name $syn.name --workspace-name synprod
               }
+              }
               
