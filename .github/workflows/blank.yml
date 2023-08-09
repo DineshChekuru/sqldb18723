@@ -49,6 +49,12 @@ jobs:
         run: |
               az login --service-principal -u 'f55422ff-27d7-49e9-bac4-b2d08e348b1e' -p '51y8Q~Z65zXIl9VvlskSLdWF3wiqSnXgqH_yMb9f' --tenant 'd5d054a0-66ec-434f-88c2-0ac973a0dfb1'
               az Synapse trigger list --workspace-name syn1737
+
+      - name: Azure PowerShell Action
+        uses: Azure/powershell@v1
+        with:
+          inlineScript: | 
+            .\Trigger.ps1
               
 #       - name: PowerShell script
 #         # You may pin to the exact commit or the version.
