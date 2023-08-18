@@ -86,17 +86,17 @@ jobs:
               
             
         
-      # - uses: Azure/synapse-workspace-deployment@V1.7.0
-      #   with:
-      #     TargetWorkspaceName: 'syn1737'
-      #     ArtifactsFolder: ${{ github.workspace }}/buildlogs
-      #     environment: 'Azure Public'
-      #     resourceGroup: 'dinesh'
-      #     clientId: 'f55422ff-27d7-49e9-bac4-b2d08e348b1e'
-      #     clientSecret: '51y8Q~Z65zXIl9VvlskSLdWF3wiqSnXgqH_yMb9f'
-      #     subscriptionId: '56542616-48a1-4fd4-a9e2-947518afe39b'
-      #     tenantId: 'd5d054a0-66ec-434f-88c2-0ac973a0dfb1'
-      #     operation: 'validateDeploy'
+      - uses: Azure/synapse-workspace-deployment@V1.7.0
+        with:
+          TargetWorkspaceName: 'syn-prod-res'
+          ArtifactsFolder: ${{ github.workspace }}/buildlogs
+          environment: 'Azure Public'
+          resourceGroup: 'Dinesh'
+          clientId: 'e0e3b2a2-a07c-45fc-8352-bae5c3542898'
+          clientSecret: 'e3x8Q~Q6lutthU4XxNpktMHfbewo1zKSolk.bcvL'
+          subscriptionId: '7f5b8e99-7c2c-42fe-bc73-f409e8ab54e6'
+          tenantId: 'a96d1dd0-4ad5-432f-8cab-38064397c182'
+          operation: 'validateDeploy'
 
 #       - name: Generate templates
 #         run: ./generate-templates.ps1
