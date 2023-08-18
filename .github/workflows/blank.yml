@@ -89,6 +89,7 @@ jobs:
       - uses: Azure/synapse-workspace-deployment@V1.7.0
         with:
           TargetWorkspaceName: 'syn-prod-res'
+          OverrideArmParameters: ./parameters.yml
           ArtifactsFolder: ${{ github.workspace }}/buildlogs
           environment: 'Azure Public'
           resourceGroup: 'Dinesh'
