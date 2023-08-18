@@ -47,19 +47,19 @@ jobs:
               
       - name: CLI Login
         run: |
-              az login --service-principal -u 'f55422ff-27d7-49e9-bac4-b2d08e348b1e' -p '51y8Q~Z65zXIl9VvlskSLdWF3wiqSnXgqH_yMb9f' --tenant 'd5d054a0-66ec-434f-88c2-0ac973a0dfb1'
-              az Synapse trigger list --workspace-name syn1737
+              az login --service-principal -u 'e0e3b2a2-a07c-45fc-8352-bae5c3542898' -p 'e3x8Q~Q6lutthU4XxNpktMHfbewo1zKSolk.bcvL' --tenant 'a96d1dd0-4ad5-432f-8cab-38064397c182'
+              az Synapse trigger list --workspace-name syn-prod-res
 
-      - name: Azure PowerShell Action
-        uses: Azure/powershell@v1
-        with:
-          inlineScript: | 
-            .\Trigger.ps1
+      # - name: Azure PowerShell Action
+      #   uses: Azure/powershell@v1
+      #   with:
+      #     inlineScript: | 
+      #       .\Trigger.ps1
         
-            # Azure PS version to be used to execute the script, example: 1.8.0, 2.8.0, 3.4.0. To use the latest version, specify "latest".
-          azPSVersion: latest
-            # Select the value of the ErrorActionPreference variable for executing the script. Options: stop, continue, silentlyContinue. Default is Stop.
-          errorActionPreference: Stop
+      #       # Azure PS version to be used to execute the script, example: 1.8.0, 2.8.0, 3.4.0. To use the latest version, specify "latest".
+      #     azPSVersion: latest
+      #       # Select the value of the ErrorActionPreference variable for executing the script. Options: stop, continue, silentlyContinue. Default is Stop.
+      #     errorActionPreference: Stop
               
 #       - name: PowerShell script
 #         # You may pin to the exact commit or the version.
