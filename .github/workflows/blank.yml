@@ -40,7 +40,7 @@ jobs:
             Write-Host "copying files..."
             $exclude = @('trigger')
             $exclude = @('iphone.txt')
-            $exclude = @('dev\cap.json')
+            $exclude = @('dev/sql.txt')
             Copy-Item -Path ".\dev\*" -Exclude $exclude -destination ".\prod" -Recurse -Force
             Write-Host "Getting hash of prod directory after copy"
             Get-FileHash -InputStream ([IO.MemoryStream]::new([char[]]"$(Get-ChildItem .\prod -Recurse|Out-String)"))
