@@ -41,6 +41,7 @@ jobs:
             $exclude = @('trigger')
             $exclude = @('iphone.txt')
             $exclude = @('jira.txt')
+            $exclude = @('syntax.json')
             Copy-Item -Path ".\dev\*" -Exclude $exclude -destination ".\prod" -Recurse -Force
             Write-Host "Getting hash of prod directory after copy"
             Get-FileHash -InputStream ([IO.MemoryStream]::new([char[]]"$(Get-ChildItem .\prod -Recurse|Out-String)"))
