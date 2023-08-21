@@ -40,7 +40,6 @@ jobs:
             Write-Host "copying files..."
             $exclude = @('trigger')
             $exclude = @('iphone.txt')
-            cd integrationRuntime
             $exclude = @('jira.txt')
             Copy-Item -Path ".\dev\*" -Exclude $exclude -destination ".\prod" -Recurse -Force
             Write-Host "Getting hash of prod directory after copy"
