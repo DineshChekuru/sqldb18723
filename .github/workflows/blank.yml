@@ -22,8 +22,8 @@ jobs:
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
-    runs-on: self-hosted
-    #runs-on: windows-latest
+    #runs-on: self-hosted
+    runs-on: windows-latest
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -45,9 +45,13 @@ jobs:
             # Select the value of the ErrorActionPreference variable for executing the script. Options: stop, continue, silentlyContinue. Default is Stop.
           errorActionPreference: Stop
 
+      # - name: Run Git commands
+      #   run: |
+      #     cd sqldb18723
+      #     & "C:\Program Files\Git\bin\git.exe" add .
+      #     & "C:\Program Files\Git\bin\git.exe" commit -m "latest"
+      #     & "C:\Program Files\Git\bin\git.exe" push
+
       - name: Run Git commands
         run: |
-          cd sqldb18723
-          & "C:\Program Files\Git\bin\git.exe" add .
-          & "C:\Program Files\Git\bin\git.exe" commit -m "latest"
-          & "C:\Program Files\Git\bin\git.exe" push
+          git checkout -b feature_102 4b3bd82
