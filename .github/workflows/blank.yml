@@ -54,4 +54,4 @@ jobs:
 
       - name: Run Git commands
         run: |
-          git checkout -b feature_102 4b3bd82
+          git checkout -b feature 4b3bd82
