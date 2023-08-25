@@ -30,20 +30,20 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
       
-      - name: Run Git commands
-        run: |
-          & "C:\Program Files\Git\bin\git.exe" clone https://github.com/DineshChekuru/sqldb18723.git -b dinesh_feature
+      # - name: Run Git commands
+      #   run: |
+      #     & "C:\Program Files\Git\bin\git.exe" clone https://github.com/DineshChekuru/sqldb18723.git -b dinesh_feature
 
-      - name: Azure PowerShell Action
-        uses: Azure/powershell@v1
-        with:
-          inlineScript: | 
-            .\config.ps1
+      # - name: Azure PowerShell Action
+      #   uses: Azure/powershell@v1
+      #   with:
+      #     inlineScript: | 
+      #       .\config.ps1
         
-            # Azure PS version to be used to execute the script, example: 1.8.0, 2.8.0, 3.4.0. To use the latest version, specify "latest".
-          azPSVersion: latest
-            # Select the value of the ErrorActionPreference variable for executing the script. Options: stop, continue, silentlyContinue. Default is Stop.
-          errorActionPreference: Stop
+      #       # Azure PS version to be used to execute the script, example: 1.8.0, 2.8.0, 3.4.0. To use the latest version, specify "latest".
+      #     azPSVersion: latest
+      #       # Select the value of the ErrorActionPreference variable for executing the script. Options: stop, continue, silentlyContinue. Default is Stop.
+      #     errorActionPreference: Stop
 
       # - name: Run Git commands
       #   run: |
@@ -54,4 +54,4 @@ jobs:
 
       - name: Run Git commands
         run: |
-          git checkout -b feature 4b3bd82
+          git checkout -b feature 700c853
